@@ -36,7 +36,7 @@ export default function Orders() {
   ) => {
     try {
       await axios.put(
-        `http://localhost:5000/api/orders/${id}`,
+        `https://affiliate-marketing-system-5c3j.onrender.com`,
         {
           status,
         }

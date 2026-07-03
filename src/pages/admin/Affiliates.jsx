@@ -114,7 +114,7 @@ export default function Affiliates() {
   const saveAffiliate = async () => {
     try {
       const res = await fetch(
-        "http://localhost:5000/api/affiliates",
+        "https://affiliate-marketing-system-5c3j.onrender.com",
         {
           method: "POST",
           headers: {

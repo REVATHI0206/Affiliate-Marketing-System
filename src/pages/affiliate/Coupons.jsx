@@ -77,7 +77,7 @@ export default function Coupons() {
   const deleteCoupon = async (id) => {
   try {
     await fetch(
-      `http://localhost:5000/api/coupons/${id}`,
+      `https://affiliate-marketing-system-5c3j.onrender.com`,
       {
         method: "DELETE",
       }
