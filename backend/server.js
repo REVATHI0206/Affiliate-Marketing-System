@@ -146,7 +146,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://affiliate-marketing-system-5c3j.onrender.com",
+      "https://affiliate-marketing-system-o8xz.onrender.com"
     ],
     credentials: true,
   })
