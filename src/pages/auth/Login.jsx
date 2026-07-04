@@ -28,10 +28,10 @@ function Login() {
 
   const handleLogin = async () => {
     try {
-      const res = await axios.post(
-        "https://affiliate-marketing-system-5c3j.onrender.com",
-        formData
-      );
+     const res = await axios.post(
+  "https://affiliate-marketing-system-o8xz.onrender.com/api/auth/login",
+  formData
+);
 
       console.log("LOGIN RESPONSE:", res.data);
 

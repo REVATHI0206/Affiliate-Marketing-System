@@ -20,7 +20,7 @@ export default function Analytics() {
 
   const fetchAnalytics = async () => {
     try {
-      const res = await fetch("https://affiliate-marketing-system-5c3j.onrender.com");
+      const res = await fetch("https://affiliate-marketing-system-o8xz.onrender.com");
 
       const data = await res.json();
 

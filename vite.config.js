@@ -5,9 +5,7 @@ import path from "path";
 
 export default defineConfig({
   base: "/Affiliate-Marketing-System/",
-
   plugins: [react(), tailwindcss()],
-
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

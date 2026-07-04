@@ -8,7 +8,7 @@ export default function AffiliateSidebar() {
     localStorage.clear();
 
     // Redirect to Login page
-    navigate("/");
+   navigate("/", { replace: true });
   };
 
   return (
