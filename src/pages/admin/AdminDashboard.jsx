@@ -18,7 +18,7 @@ export default function Dashboard() {
 
   const fetchDashboard = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/analytics");
+      const res = await fetch("https://affiliate-marketing-system-o8xz.onrender.com/api/analytics");
       const data = await res.json();
       setStats(data);
     } catch (err) {

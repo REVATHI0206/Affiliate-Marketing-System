@@ -24,7 +24,7 @@ export default function MyOrders() {
       const userId = user._id || user.id;
 
       const res = await axios.get(
-        `http://localhost:5000/api/orders/user/${userId}`
+        `https://affiliate-marketing-system-o8xz.onrender.com/api/orders/user/${userId}`
       );
 
       setOrders(res.data);

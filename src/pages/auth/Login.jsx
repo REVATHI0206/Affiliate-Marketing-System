@@ -1,6 +1,8 @@
+
 import { useState } from "react";
-import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
+import API from "@/config/api";
+
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,40 +30,28 @@ function Login() {
 
   const handleLogin = async () => {
     try {
-     const res = await axios.post(
-  "https://affiliate-marketing-system-o8xz.onrender.com/api/auth/login",
-  formData
-);
+    const res = await API.post("/auth/login", formData);
 
       console.log("LOGIN RESPONSE:", res.data);
 
-      // Save data in localStorage
-      localStorage.setItem(
-        "token",
-        res.data.token
-      );
-
+      localStorage.setItem("token", res.data.token);
       localStorage.setItem(
         "user",
         JSON.stringify(res.data.user)
       );
-
       localStorage.setItem(
         "userId",
         res.data.user.id
       );
-
       localStorage.setItem(
         "userName",
         res.data.user.name
       );
-
       localStorage.setItem(
         "role",
         res.data.user.role
       );
 
-      // Redirect based on role
       const role = res.data.user.role;
 
       if (role === "admin") {
@@ -73,13 +63,12 @@ function Login() {
       } else {
         alert("Invalid Role");
       }
-
     } catch (err) {
       console.log(err);
 
       alert(
         err.response?.data?.message ||
-        "Login Failed"
+          "Login Failed"
       );
     }
   };

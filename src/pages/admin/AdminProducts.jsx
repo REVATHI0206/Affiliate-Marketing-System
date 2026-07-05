@@ -9,25 +9,25 @@ export default function AdminProducts() {
   useEffect(() => {
     fetchProducts();
   }, []);
+const fetchProducts = async () => {
+  try {
+    const res = await axios.get(
+      "https://affiliate-marketing-system-o8xz.onrender.com/api/products"
+    );
 
-  const fetchProducts =
-    async () => {
-      try {
-      const res = await axios.get(
-  "http://localhost:5000/api/products"
-);
+    console.log(res.data);
 
-        setProducts(res.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
+    setProducts(Array.isArray(res.data) ? res.data : []);
+  } catch (err) {
+    console.log(err);
+  }
+};
 
   const deleteProduct =
     async (id) => {
       try {
         await axios.delete(
-          `http://localhost:5000/api/products/${id}`
+          `https://affiliate-marketing-system-o8xz.onrender.com/api/products/${id}`
         );
 
         alert(
@@ -76,78 +76,54 @@ export default function AdminProducts() {
             </tr>
           </thead>
 
-          <tbody>
-            {products.map(
-              (product) => (
-                <tr
-                  key={
-                    product._id
-                  }
-                  className="border-b text-center"
-                >
-                  <td className="p-4">
-                    {product.image ? (
-                      <img
-                        src={
-                          product.image
-                        }
-                        alt={
-                          product.name
-                        }
-                        className="w-20 h-20 object-cover rounded mx-auto"
-                      />
-                    ) : (
-                      "No Image"
-                    )}
-                  </td>
+         <tbody>
+  {Array.isArray(products) &&
+    products.map((product) => (
+      <tr
+        key={product._id}
+        className="border-b text-center"
+      >
+        <td className="p-4">
+          {product.image ? (
+            <img
+              src={product.image}
+              alt={product.name}
+              className="w-20 h-20 object-cover rounded mx-auto"
+            />
+          ) : (
+            "No Image"
+          )}
+        </td>
 
-                  <td className="p-4">
-                    {
-                      product.name
-                    }
-                  </td>
+        <td className="p-4">{product.name}</td>
 
-                  <td className="p-4">
-                    ₹
-                    {
-                      product.price
-                    }
-                  </td>
+        <td className="p-4">₹{product.price}</td>
 
-                  <td className="p-4">
-                    {
-                      product.category
-                    }
-                  </td>
+        <td className="p-4">{product.category}</td>
 
-                  <td className="p-4">
-                    <button
-                      onClick={() =>
-                        deleteProduct(
-                          product._id
-                        )
-                      }
-                      className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              )
-            )}
+        <td className="p-4">
+          <button
+            onClick={() => deleteProduct(product._id)}
+            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+          >
+            Delete
+          </button>
+        </td>
+      </tr>
+    ))}
 
-            {products.length ===
-              0 && (
-              <tr>
-                <td
-                  colSpan="5"
-                  className="p-8 text-center text-slate-500"
-                >
-                  No Products Found
-                </td>
-              </tr>
-            )}
-          </tbody>
+  {Array.isArray(products) &&
+    products.length === 0 && (
+      <tr>
+        <td
+          colSpan="5"
+          className="p-8 text-center text-slate-500"
+        >
+          No Products Found
+        </td>
+      </tr>
+    )}
+</tbody>
         </table>
       </div>
     </div>

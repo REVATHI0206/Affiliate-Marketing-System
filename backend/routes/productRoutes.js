@@ -6,15 +6,58 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
   try {
-    console.log("GET PRODUCTS HIT");
+    const {
+      search,
+      category,
+      minPrice,
+      maxPrice,
+      sort,
+    } = req.query;
 
-    const products = await Product.find();
+    let query = {};
 
-    res.json(products);
-  } catch (error) {
-    console.log(error);
+    // Search
+    if (search) {
+      query.name = {
+        $regex: search,
+        $options: "i",
+      };
+    }
+
+    // Category
+    if (category && category !== "All") {
+      query.category = category;
+    }
+
+    // Price Filter
+    if (minPrice || maxPrice) {
+      query.price = {};
+
+      if (minPrice)
+        query.price.$gte = Number(minPrice);
+
+      if (maxPrice)
+        query.price.$lte = Number(maxPrice);
+    }
+
+    let products = Product.find(query);
+
+    // Sorting
+    if (sort === "low")
+      products = products.sort({ price: 1 });
+
+    if (sort === "high")
+      products = products.sort({ price: -1 });
+
+    if (sort === "latest")
+      products = products.sort({
+        createdAt: -1,
+      });
+
+    res.json(await products);
+  } catch (err) {
     res.status(500).json({
-      message: error.message,
+      message: err.message,
     });
   }
 });

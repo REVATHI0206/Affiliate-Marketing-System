@@ -20,7 +20,7 @@ export default function RulesMapping() {
   const fetchMappings = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:5000/api/rule-mappings"
+        "https://affiliate-marketing-system-o8xz.onrender.com/api/rule-mappings"
       );
 
       setMappings(res.data);

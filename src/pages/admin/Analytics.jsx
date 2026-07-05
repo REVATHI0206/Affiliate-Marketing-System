@@ -4,6 +4,9 @@ import AdminNavbar from "@/components/AdminNavbar";
 import { Card, CardContent } from "@/components/ui/card";
 
 export default function Analytics() {
+  const API =
+    "https://affiliate-marketing-system-o8xz.onrender.com";
+
   const [stats, setStats] = useState({
     users: 0,
     affiliates: 0,
@@ -20,7 +23,9 @@ export default function Analytics() {
 
   const fetchAnalytics = async () => {
     try {
-      const res = await fetch("https://affiliate-marketing-system-o8xz.onrender.com");
+      const res = await fetch(
+        `${API}/api/analytics`
+      );
 
       const data = await res.json();
 
@@ -34,7 +39,7 @@ export default function Analytics() {
     <div className="flex">
       <AdminSidebar />
 
-      <div className=" ml-64 flex-1 bg-slate-100 min-h-screen">
+      <div className="ml-64 flex-1 bg-slate-100 min-h-screen">
         <AdminNavbar />
 
         <div className="p-8">
@@ -59,7 +64,9 @@ export default function Analytics() {
 
             <Card>
               <CardContent className="p-6">
-                <p className="text-slate-500">Affiliates</p>
+                <p className="text-slate-500">
+                  Affiliates
+                </p>
                 <h2 className="text-3xl font-bold">
                   {stats.affiliates}
                 </h2>
@@ -68,7 +75,9 @@ export default function Analytics() {
 
             <Card>
               <CardContent className="p-6">
-                <p className="text-slate-500">Coupons</p>
+                <p className="text-slate-500">
+                  Coupons
+                </p>
                 <h2 className="text-3xl font-bold">
                   {stats.coupons}
                 </h2>
@@ -77,7 +86,9 @@ export default function Analytics() {
 
             <Card>
               <CardContent className="p-6">
-                <p className="text-slate-500">Referrals</p>
+                <p className="text-slate-500">
+                  Referrals
+                </p>
                 <h2 className="text-3xl font-bold">
                   {stats.referrals}
                 </h2>
@@ -86,7 +97,9 @@ export default function Analytics() {
 
             <Card>
               <CardContent className="p-6">
-                <p className="text-slate-500">Orders</p>
+                <p className="text-slate-500">
+                  Orders
+                </p>
                 <h2 className="text-3xl font-bold">
                   {stats.orders}
                 </h2>
@@ -95,21 +108,36 @@ export default function Analytics() {
 
             <Card>
               <CardContent className="p-6">
-                <p className="text-slate-500">Revenue</p>
+                <p className="text-slate-500">
+                  Revenue
+                </p>
+
                 <h2 className="text-3xl font-bold text-green-600">
-                 ₹{Number(stats.revenue).toLocaleString("en-IN", {
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
-})}
+                  ₹
+                  {Number(
+                    stats.revenue
+                  ).toLocaleString("en-IN", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
                 </h2>
               </CardContent>
             </Card>
 
             <Card>
               <CardContent className="p-6">
-                <p className="text-slate-500">Commission</p>
+                <p className="text-slate-500">
+                  Commission
+                </p>
+
                 <h2 className="text-3xl font-bold text-green-600">
-                  ₹{stats.commission}
+                  ₹
+                  {Number(
+                    stats.commission
+                  ).toLocaleString("en-IN", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
                 </h2>
               </CardContent>
             </Card>

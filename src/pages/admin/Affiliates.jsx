@@ -26,20 +26,18 @@ export default function Affiliates() {
     fetchRules();
   }, []);
 
-  const fetchRules = async () => {
-    try {
-      const res = await fetch(
-        "http://localhost:5000/api/rules"
-      );
+const fetchRules = async () => {
+  try {
+    const res = await fetch(
+      "https://affiliate-marketing-system-o8xz.onrender.com/api/rules"
+    );
 
-      const data = await res.json();
-
-      setRules(data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
+    const data = await res.json();
+    setRules(data);
+  } catch (err) {
+    console.log(err);
+  }
+};
  const fetchAffiliates = async () => {
   try {
     const [
@@ -47,9 +45,9 @@ export default function Affiliates() {
       couponRes,
       earningRes,
     ] = await Promise.all([
-      fetch("http://localhost:5000/api/affiliates"),
-      fetch("http://localhost:5000/api/coupons"),
-      fetch("http://localhost:5000/api/earnings"),
+     fetch("https://affiliate-marketing-system-o8xz.onrender.com/api/affiliates"),
+fetch("https://affiliate-marketing-system-o8xz.onrender.com/api/coupons"),
+fetch("https://affiliate-marketing-system-o8xz.onrender.com/api/earnings"),
     ]);
 
     const affiliatesData = await affiliateRes.json();
@@ -112,48 +110,63 @@ export default function Affiliates() {
 };
 
   const saveAffiliate = async () => {
-    try {
-      const res = await fetch(
-        "https://affiliate-marketing-system-o8xz.onrender.com",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type":
-              "application/json",
-          },
-          body: JSON.stringify({
-            name,
-            email,
-            rule,
-          }),
-        }
-      );
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        alert(
-          data.message ||
-            "Failed to create affiliate"
-        );
-        return;
+  try {
+    const res = await fetch(
+      "https://affiliate-marketing-system-o8xz.onrender.com/api/affiliates",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          rule,
+        }),
       }
+    );
 
-      alert(
-        "Affiliate Added Successfully"
-      );
+    const data = await res.json();
 
-      setName("");
-      setEmail("");
-      setRule("");
-
-      fetchAffiliates();
-    } catch (err) {
-      console.log(err);
-      alert("Server Error");
+    if (!res.ok) {
+      alert(data.message);
+      return;
     }
-  };
 
+    alert("Affiliate Added Successfully");
+
+    setName("");
+    setEmail("");
+    setRule("");
+
+    fetchAffiliates();
+  } catch (err) {
+    console.log(err);
+    alert("Server Error");
+  }
+};
+    
+const deleteAffiliate = async (id) => {
+  if (!window.confirm("Delete this affiliate?")) return;
+
+  try {
+    const res = await fetch(
+      `https://affiliate-marketing-system-o8xz.onrender.com/api/affiliates/${id}`,
+      {
+        method: "DELETE",
+      }
+    );
+
+    const data = await res.json();
+
+    alert(data.message);
+
+    fetchAffiliates();
+  } catch (err) {
+    console.log(err);
+    alert("Delete Failed");
+  }
+};
   return (
     <div className="flex">
       <AdminSidebar />
@@ -240,7 +253,7 @@ export default function Affiliates() {
             </DialogContent>
           </Dialog>
         </div>
-
+         
         <Card>
           <CardContent className="p-6">
             <table className="w-full">
@@ -257,6 +270,7 @@ export default function Affiliates() {
                   <th>Rule</th>
 
                   <th>Earnings</th>
+<th>Action</th>
                 </tr>
               </thead>
 
@@ -284,9 +298,17 @@ export default function Affiliates() {
                       <td>
                         {item.rule}
                       </td>
-
-                     <td className="text-green-600 font-semibold">
+<td className="text-green-600 font-semibold">
   ₹{item.earnings}
+</td>
+
+<td>
+  <button
+    onClick={() => deleteAffiliate(item._id)}
+    className="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded"
+  >
+    Delete
+  </button>
 </td>
                     </tr>
                   )

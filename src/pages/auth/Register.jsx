@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
-
+import API from "@/config/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -31,33 +31,32 @@ function Register() {
   };
 
   const handleSubmit = async () => {
-    if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match");
-      return;
-    }
+  if (formData.password !== formData.confirmPassword) {
+    alert("Passwords do not match");
+    return;
+  }
 
-    try {
-      const res = await axios.post(
-        "http://localhost:5000/api/auth/register",
-        {
-          name: formData.name,
-          email: formData.email,
-          password: formData.password,
-          role: formData.role,
-          referralCode: formData.referralCode,
-        }
-      );
+  try {
+    const res = await axios.post(`${API}/api/auth/register`, formData,
+      {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        role: formData.role,
+        referralCode: formData.referralCode,
+      }
+    );
 
-      alert(res.data.message);
-      navigate("/");
-    } catch (err) {
-      console.log(err);
-      alert(
-        err.response?.data?.message ||
-          "Registration Failed"
-      );
-    }
-  };
+    alert(res.data.message);
+    navigate("/");
+  } catch (err) {
+    console.log(err);
+
+    alert(
+      err.response?.data?.message || "Registration Failed"
+    );
+  }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-100">
@@ -101,7 +100,7 @@ function Register() {
           />
 
           {/* Role Selection */}
-          {/* <select
+           <select
             name="role"
             value={formData.role}
             onChange={handleChange}
@@ -116,7 +115,7 @@ function Register() {
             <option value="user">
               User
             </option>
-          </select> */}
+          </select> *
 
           <Input
             placeholder="Referral Code (Optional)"

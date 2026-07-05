@@ -13,7 +13,7 @@ export default function Payouts() {
   const fetchPayouts = async () => {
     try {
       const res = await fetch(
-        "http://localhost:5000/api/earnings"
+        "https://affiliate-marketing-system-o8xz.onrender.com/api/earnings"
       );
 
       const data = await res.json();

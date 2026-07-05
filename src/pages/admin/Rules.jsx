@@ -3,7 +3,7 @@ import AdminSidebar from "../../components/AdminSidebar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import AdminNavbar from "@/components/AdminNavbar";
-
+import API from "../../config/api";
 import {
   Dialog,
   DialogContent,
@@ -23,45 +23,46 @@ export default function Rules() {
 
   // Fetch Rules
   const fetchRules = async () => {
-    try {
-      const res = await fetch("http://localhost:5000/api/rules");
-      const data = await res.json();
-      setRules(data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  try {
+    const res = await API.get("/rules");
+    setRules(res.data);
+  } catch (err) {
+    console.log(err);
+  }
+};
 
   useEffect(() => {
     fetchRules();
   }, []);
 
   // Save Rule
-  const saveRule = async () => {
-    try {
-      const res = await fetch("http://localhost:5000/api/rules", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ruleName,
-          discount: Number(discount),
-          commission: Number(commission),
-        }),
-      });
+ const saveRule = async () => {
+  try {
+    const res = await API.post("/rules", {
+      ruleName,
+      discount: Number(discount),
+      commission: Number(commission),
+    });
 
-      if (res.ok) {
-        setRuleName("");
-        setDiscount("");
-        setCommission("");
-        fetchRules();
-        alert("Rule Added Successfully");
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+    alert("Rule Created Successfully");
+
+    fetchRules();
+  } catch (err) {
+    console.log(err);
+    alert("Failed");
+  }
+};
+  //     if (res.ok) {
+  //       setRuleName("");
+  //       setDiscount("");
+  //       setCommission("");
+  //       fetchRules();
+  //       alert("Rule Added Successfully");
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   return (
     <div className="flex">

@@ -38,7 +38,7 @@ export default function AddProduct() {
 
     try {
       await axios.post(
-        "http://localhost:5000/api/products",
+        "https://affiliate-marketing-system-o8xz.onrender.com/api/products",
         formData
       );
 

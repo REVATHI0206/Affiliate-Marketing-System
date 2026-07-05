@@ -18,7 +18,7 @@ export default function AffiliateDashboard() {
 
       // Coupons
       const couponRes = await fetch(
-        "http://localhost:5000/api/coupons"
+        "https://affiliate-marketing-system-o8xz.onrender.com/api/coupons"
       );
 
       const coupons = await couponRes.json();
@@ -30,7 +30,7 @@ export default function AffiliateDashboard() {
 
       // Earnings
       const earningRes = await fetch(
-        "http://localhost:5000/api/earnings"
+        "https://affiliate-marketing-system-o8xz.onrender.com/api/earnings"
       );
 
       const earnings = await earningRes.json();

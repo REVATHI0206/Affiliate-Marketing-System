@@ -42,7 +42,7 @@ export default function EditProduct() {
       try {
         const res =
           await axios.get(
-            `http://localhost:5000/api/products/${id}`
+            `https://affiliate-marketing-system-o8xz.onrender.com/api/products/${id}`
           );
 
         setFormData(

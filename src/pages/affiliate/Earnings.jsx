@@ -12,10 +12,10 @@ export default function Earnings() {
 
   const fetchEarnings = async () => {
     try {
-      const user = JSON.parse(
-        localStorage.getItem("user")
-      );
+    const user = JSON.parse(localStorage.getItem("user"));
 
+console.log(user);
+console.log("Affiliate ID:", user._id || user.id);
       if (!user) {
         alert("Please Login");
         return;
@@ -23,9 +23,9 @@ export default function Earnings() {
 
       const affiliateId =
         user._id || user.id;
-
+         console.log("Calling:", `https://affiliate-marketing-system-o8xz.onrender.com/api/earnings/${affiliateId}`);
       const res = await axios.get(
-        `http://localhost:5000/api/earnings/${affiliateId}`
+        `https://affiliate-marketing-system-o8xz.onrender.com/api/earnings/${affiliateId}`
       );
 
       console.log("Earnings:", res.data);

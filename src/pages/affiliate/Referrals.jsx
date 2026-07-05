@@ -15,7 +15,7 @@ export default function Referrals() {
       try {
         const res =
           await axios.get(
-            "http://localhost:5000/api/referrals"
+            "https://affiliate-marketing-system-o8xz.onrender.com/api/referrals"
           );
 
         setReferrals(

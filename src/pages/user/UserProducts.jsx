@@ -1,14 +1,34 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { useEffect, useMemo, useState } from "react";
+import API from "@/config/api";
+
 import UserSidebar from "../../components/UserSidebar";
 import UserNavbar from "../../components/UserNavbar";
 
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
+import {
+  Search,
+  Heart,
+  ShoppingCart,
+  Star,
+  Filter,
+} from "lucide-react";
+
 export default function UserProducts() {
   const [products, setProducts] = useState([]);
+
   const [couponCode, setCouponCode] = useState("");
   const [discount, setDiscount] = useState(0);
+
+  const [search, setSearch] = useState("");
+
+  const [category, setCategory] =
+    useState("All");
+
+  const [sort, setSort] =
+    useState("latest");
 
   useEffect(() => {
     fetchProducts();
@@ -16,24 +36,32 @@ export default function UserProducts() {
 
   const fetchProducts = async () => {
     try {
-      const res = await axios.get(
-        "http://localhost:5000/api/products"
-      );
+      const res = await API.get("/products");
 
-      console.log("Products Data:", res.data);
-      setProducts(res.data);
+      setProducts(
+        Array.isArray(res.data)
+          ? res.data
+          : []
+      );
     } catch (err) {
       console.log(err);
     }
   };
 
   const applyCoupon = async () => {
+    if (!couponCode.trim()) {
+      alert("Enter Coupon");
+      return;
+    }
+
     try {
-      const res = await axios.get(
-        `http://localhost:5000/api/coupons/code/${couponCode}`
+      const res = await API.get(
+        `/coupons/code/${couponCode}`
       );
 
-      setDiscount(res.data.discount || 0);
+      setDiscount(
+        Number(res.data.discount)
+      );
 
       alert(
         `${res.data.discount}% Discount Applied`
@@ -53,19 +81,13 @@ export default function UserProducts() {
         localStorage.getItem("cart")
       ) || [];
 
-    const existingItem = cart.find(
-      (item) => item._id === product._id
+    const existing = cart.find(
+      (item) =>
+        item._id === product._id
     );
 
-    if (existingItem) {
-      cart = cart.map((item) =>
-        item._id === product._id
-          ? {
-              ...item,
-              quantity: item.quantity + 1,
-            }
-          : item
-      );
+    if (existing) {
+      existing.quantity += 1;
     } else {
       cart.push({
         ...product,
@@ -81,8 +103,82 @@ export default function UserProducts() {
       JSON.stringify(cart)
     );
 
-    alert("Product Added To Cart");
+    alert("Added To Cart");
   };
+
+  const categories = [
+    "All",
+    ...new Set(
+      products.map(
+        (p) => p.category
+      )
+    ),
+  ];
+
+  const filteredProducts =
+    useMemo(() => {
+      let data = [...products];
+
+      if (
+        category !== "All"
+      ) {
+        data = data.filter(
+          (item) =>
+            item.category ===
+            category
+        );
+      }
+
+      if (search) {
+        data = data.filter(
+          (item) =>
+            item.name
+              .toLowerCase()
+              .includes(
+                search.toLowerCase()
+              ) ||
+            item.description
+              ?.toLowerCase()
+              .includes(
+                search.toLowerCase()
+              )
+        );
+      }
+
+      switch (sort) {
+        case "low":
+          data.sort(
+            (a, b) =>
+              a.price - b.price
+          );
+          break;
+
+        case "high":
+          data.sort(
+            (a, b) =>
+              b.price - a.price
+          );
+          break;
+
+        case "name":
+          data.sort((a, b) =>
+            a.name.localeCompare(
+              b.name
+            )
+          );
+          break;
+
+        default:
+          break;
+      }
+
+      return data;
+    }, [
+      products,
+      search,
+      category,
+      sort,
+    ]);
 
   return (
     <div className="flex">
@@ -109,63 +205,45 @@ export default function UserProducts() {
               return (
                 <Card
                   key={product._id}
-                  className="group overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-md hover:shadow-2xl hover:-translate-y-2 transition-all duration-300"
+                  className="group overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300"
                 >
                   <CardContent className="p-0">
-                    {/* Product Image */}
-                    <div className="overflow-hidden">
-                      <img
-                        src={
-                          product.image
-                            ? product.image
-                            : "https://dummyimage.com/400x400/cccccc/000000&text=No+Image"
-                        }
-                        alt={product.name}
-                        className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
-                        onError={(e) => {
-                          e.target.src =
-                            "https://dummyimage.com/400x400/cccccc/000000&text=No+Image";
-                        }}
-                      />
-                    </div>
+                    <img
+                      src={
+                        product.image ||
+                        "https://dummyimage.com/400x400/cccccc/000000&text=No+Image"
+                      }
+                      alt={product.name}
+                      className="w-full h-64 object-cover"
+                      onError={(e) => {
+                        e.target.src =
+                          "https://dummyimage.com/400x400/cccccc/000000&text=No+Image";
+                      }}
+                    />
 
                     <div className="p-5">
-                      {/* Product Name */}
-                      <h2 className="text-2xl font-bold text-slate-800 mb-2">
+                      <h2 className="text-2xl font-bold mb-2">
                         {product.name}
                       </h2>
 
-                      {/* Description */}
-                      <p className="text-gray-500 text-sm mb-4 min-h-[40px]">
+                      <p className="text-gray-500 mb-3">
                         {product.description}
                       </p>
 
-                      {/* Category */}
-                      <span className="inline-block bg-blue-100 text-blue-700 text-xs font-semibold px-3 py-1 rounded-full mb-4">
+                      <span className="inline-block bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm mb-4">
                         {product.category}
                       </span>
 
-                      {/* Price Section */}
-                      <div className="space-y-1 mb-5">
-                        {/* <p className="text-gray-500 text-sm">
-                          Original Price
-                        </p> */}
-{/* 
-                        <p className="text-red-500 line-through text-lg">
-                          ₹{product.price}
-                        </p> */}
+                     
+ <p className="text-green-600 mb-2">
+  Discount: {discount}%
+</p>
 
-                        <p className="text-green-600 font-semibold">
-                          Discount : {discount}%
-                        </p>
+<p className="text-3xl font-bold text-blue-600 mb-4">
+  ₹{finalPrice}
+</p>
 
-                        <p className="text-3xl font-bold text-blue-600">
-                          ₹{finalPrice}
-                        </p>
-                      </div>
-
-                      {/* Coupon */}
-                      {/* <div className="flex gap-2 mb-4">
+                      <div className="flex gap-2 mb-4">
                         <input
                           type="text"
                           placeholder="Coupon Code"
@@ -175,7 +253,7 @@ export default function UserProducts() {
                               e.target.value
                             )
                           }
-                          className="flex-1 border rounded-lg px-3 py-2 text-sm"
+                          className="flex-1 border rounded-lg px-3 py-2"
                         />
 
                         <Button
@@ -184,11 +262,10 @@ export default function UserProducts() {
                         >
                           Apply
                         </Button>
-                      </div> */}
+                      </div>
 
-                      {/* Add To Cart */}
                       <Button
-                        className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-2"
+                        className="w-full bg-blue-600 hover:bg-blue-700"
                         onClick={() =>
                           addToCart(product)
                         }

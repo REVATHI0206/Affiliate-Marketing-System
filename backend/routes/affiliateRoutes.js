@@ -10,10 +10,7 @@ const router = express.Router();
 // ===============================
 router.get("/", async (req, res) => {
   try {
-    const affiliates = await User.find({
-      role: "affiliate",
-    });
-
+    const affiliates = await Affiliate.find();
     res.json(affiliates);
   } catch (error) {
     res.status(500).json({
@@ -21,7 +18,6 @@ router.get("/", async (req, res) => {
     });
   }
 });
-
 // ===============================
 // CREATE AFFILIATE
 // ===============================
@@ -75,32 +71,27 @@ router.post("/", async (req, res) => {
 // ===============================
 router.delete("/:id", async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
+    const affiliate = await Affiliate.findById(req.params.id);
 
-    if (!user) {
+    if (!affiliate) {
       return res.status(404).json({
         message: "Affiliate not found",
       });
     }
 
-    // Delete related coupons
     await Coupon.deleteMany({
-      affiliateName: user.name,
+      affiliateName: affiliate.name,
     });
 
-    // Delete affiliate user
-    await User.findByIdAndDelete(req.params.id);
+    await Affiliate.findByIdAndDelete(req.params.id);
 
     res.json({
       message: "Affiliate Deleted Successfully",
     });
   } catch (error) {
-    console.log(error);
-
     res.status(500).json({
       message: error.message,
     });
   }
 });
-
 export default router;
