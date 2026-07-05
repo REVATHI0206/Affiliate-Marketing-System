@@ -2,12 +2,10 @@ import express from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
-
-
+import Affiliate from "../models/Affiliate.js";
 
 const router = express.Router();
 
-// Generate Referral Code
 const generateCode = (name) => {
   return (
     name.slice(0, 4).toUpperCase() +
@@ -15,23 +13,17 @@ const generateCode = (name) => {
   );
 };
 
-// ====================
 // REGISTER
-// ====================
-import Affiliate from "../models/Affiliate.js";
-
 router.post("/register", async (req, res) => {
   try {
-   const {
-  name,
-  email,
-  password,
-  referralCode,
-  role,
-} = req.body;
-    const existingUser = await User.findOne({
+    const {
+      name,
       email,
-    });
+      password,
+      role,
+    } = req.body;
+
+    const existingUser = await User.findOne({ email });
 
     if (existingUser) {
       return res.status(400).json({
@@ -39,41 +31,23 @@ router.post("/register", async (req, res) => {
       });
     }
 
-    const hashedPassword = await bcrypt.hash(
-      password,
-      10
-    );
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    const generatedCode =
-      generateCode(name);
+    const referralCode = generateCode(name);
 
     const user = await User.create({
       name,
       email,
       password: hashedPassword,
       role: role || "user",
-      referralCode: generatedCode,
-      referredBy: referralCode || null,
+      referralCode,
     });
-if (referralCode) {
-  const affiliate = await User.findOne({
-    referralCode,
-    role: "affiliate",
-  });
 
-  if (affiliate) {
-    await Referral.create({
-      affiliate: affiliate._id,
-      referredUser: user._id,
-    });
-  }
-}
-    // If affiliate, create affiliate record also
     if (role === "affiliate") {
       await Affiliate.create({
         name,
         email,
-        coupon: generatedCode,
+        coupon: referralCode,
         earnings: 0,
       });
     }
@@ -83,19 +57,18 @@ if (referralCode) {
       user,
     });
   } catch (err) {
+    console.log(err);
     res.status(500).json({
       message: err.message,
     });
   }
 });
-// ====================
+
 // LOGIN
-// ====================
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Find user
     const user = await User.findOne({ email });
 
     if (!user) {
@@ -104,7 +77,6 @@ router.post("/login", async (req, res) => {
       });
     }
 
-    // Check password
     const isMatch = await bcrypt.compare(
       password,
       user.password
@@ -116,7 +88,6 @@ router.post("/login", async (req, res) => {
       });
     }
 
-    // Generate JWT
     const token = jwt.sign(
       {
         id: user._id,
@@ -128,10 +99,9 @@ router.post("/login", async (req, res) => {
       }
     );
 
-    res.status(200).json({
+    res.json({
       message: "Login Successful",
       token,
-      role: user.role,
       user: {
         id: user._id,
         name: user.name,
@@ -139,68 +109,12 @@ router.post("/login", async (req, res) => {
         role: user.role,
       },
     });
-  } catch (error) {
-    console.log(error);
-
+  } catch (err) {
+    console.log(err);
     res.status(500).json({
-      message: error.message,
+      message: err.message,
     });
   }
-});
-// Update Product
-router.put("/:id", async (req, res) => {
-  try {
-    const product =
-      await Product.findByIdAndUpdate(
-        req.params.id,
-        req.body,
-        { new: true }
-      );
-
-    res.json({
-      message: "Product Updated",
-      product,
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-});
-
-// Delete Product
-router.delete("/:id", async (req, res) => {
-  try {
-    await Product.findByIdAndDelete(
-      req.params.id
-    );
-
-    res.json({
-      message: "Product Deleted",
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-  router.get(
-  "/:id",
-  async (req, res) => {
-    try {
-      const product =
-        await Product.findById(
-          req.params.id
-        );
-
-      res.json(product);
-    } catch (error) {
-      res.status(500).json({
-        message:
-          error.message,
-      });
-    }
-  }
-);
 });
 
 export default router;
