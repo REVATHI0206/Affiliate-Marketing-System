@@ -168,7 +168,7 @@ app.use("/api/user", userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/affiliates", affiliateRoutes);
 app.use("/api/coupons", couponRoutes);
-
+app.use("/api/rules", ruleRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/rules", ruleRoutes);
 app.use("/api/rule-mappings", ruleMappingRoutes);
@@ -186,4 +186,7 @@ app.listen(PORT, () => {
   console.log(`✅ Server running on port ${PORT}`);
   console.log("JWT_SECRET =", process.env.JWT_SECRET);
   console.log("CLOUD_NAME =", process.env.CLOUD_NAME);
+});
+app.get("/api/test", (req, res) => {
+  res.json({ message: "Backend Updated" });
 });
