@@ -187,34 +187,90 @@ export default function UserProducts() {
       <div className="ml-64 flex-1 min-h-screen bg-slate-100 p-8">
         <UserNavbar />
 
-        <h1 className="text-4xl font-bold text-slate-800 mb-8">
-          Products
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+
+    <div>
+        <h1 className="text-4xl font-bold">
+            Products
         </h1>
 
+        <p className="text-gray-500">
+            Explore our latest collection
+        </p>
+    </div>
+
+    <div className="flex gap-3">
+
+        <div className="relative">
+
+            <Search
+                className="absolute left-3 top-3 text-gray-400"
+                size={18}
+            />
+
+            <Input
+                placeholder="Search..."
+                value={search}
+                onChange={(e)=>setSearch(e.target.value)}
+                className="pl-10 w-72"
+            />
+
+        </div>
+
+        <select
+            value={category}
+            onChange={(e)=>setCategory(e.target.value)}
+            className="border rounded-lg px-3"
+        >
+            {categories.map(cat=>(
+                <option key={cat}>
+                    {cat}
+                </option>
+            ))}
+        </select>
+
+        <select
+            value={sort}
+            onChange={(e)=>setSort(e.target.value)}
+            className="border rounded-lg px-3"
+        >
+            <option value="latest">Latest</option>
+            <option value="low">Low Price</option>
+            <option value="high">High Price</option>
+            <option value="name">Name</option>
+        </select>
+
+    </div>
+
+</div>
         {products.length === 0 ? (
           <div className="text-center text-xl text-gray-500 mt-20">
             No Products Found
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-            {products.map((product) => {
+<div className="ml-64 flex-1 min-h-screen bg-gray-100 px-8 py-6 overflow-x-hidden">       {filteredProducts.map((product) => {
               const finalPrice =
                 product.price -
                 (product.price * discount) / 100;
 
               return (
                 <Card
-                  key={product._id}
-                  className="group overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300"
-                >
+  key={product._id}
+  className="relative group overflow-hidden rounded-2xl border bg-white shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-1"
+>
+                  <div className="absolute top-3 left-3 bg-green-600 text-white text-xs px-2 py-1 rounded-full">
+    {discount}% OFF
+</div>
+
                   <CardContent className="p-0">
+                    
                     <img
                       src={
                         product.image ||
                         "https://dummyimage.com/400x400/cccccc/000000&text=No+Image"
                       }
                       alt={product.name}
-                      className="w-full h-64 object-cover"
+                     className="w-full h-64 object-contain bg-gray-50 p-4"
                       onError={(e) => {
                         e.target.src =
                           "https://dummyimage.com/400x400/cccccc/000000&text=No+Image";
@@ -235,43 +291,52 @@ export default function UserProducts() {
                       </span>
 
                      
- <p className="text-green-600 mb-2">
-  Discount: {discount}%
-</p>
+<div className="flex items-center gap-3 mt-3">
 
-<p className="text-3xl font-bold text-blue-600 mb-4">
-  ₹{finalPrice}
-</p>
+    <h2 className="text-2xl font-bold text-purple-700">
+        ₹{finalPrice}
+    </h2>
 
-                      <div className="flex gap-2 mb-4">
-                        <input
-                          type="text"
-                          placeholder="Coupon Code"
-                          value={couponCode}
-                          onChange={(e) =>
-                            setCouponCode(
-                              e.target.value
-                            )
-                          }
-                          className="flex-1 border rounded-lg px-3 py-2"
-                        />
+    <span className="line-through text-gray-400">
+        ₹{product.price}
+    </span>
 
-                        <Button
-                          onClick={applyCoupon}
-                          className="bg-green-600 hover:bg-green-700"
-                        >
-                          Apply
-                        </Button>
-                      </div>
+</div>
 
-                      <Button
-                        className="w-full bg-blue-600 hover:bg-blue-700"
-                        onClick={() =>
-                          addToCart(product)
-                        }
-                      >
-                        Add To Cart 🛒
-                      </Button>
+                      <div className="flex gap-3 mb-6">
+
+  <Input
+    placeholder="Enter Coupon Code"
+    value={couponCode}
+    onChange={(e) => setCouponCode(e.target.value)}
+    className="w-72"
+  />
+
+  <Button
+    onClick={applyCoupon}
+    className="bg-green-600 hover:bg-green-700"
+  >
+    Apply Coupon
+  </Button>
+<input />
+
+⭐4.5
+
+<Button></Button>
+</div>
+
+                   <Button
+className="w-full mt-5 rounded-xl bg-purple-600 hover:bg-purple-700"
+onClick={()=>addToCart(product)}
+>
+
+<ShoppingCart size={18}/>
+
+<span className="ml-2">
+Add To Cart
+</span>
+
+</Button>
                     </div>
                   </CardContent>
                 </Card>

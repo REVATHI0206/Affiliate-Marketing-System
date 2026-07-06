@@ -7,19 +7,31 @@ const orderSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-   products: [
-  {
-    product: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Product",
-    },
-    quantity: Number,
-  },
-],
+
+    products: [
+      {
+        product: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Product",
+          required: true,
+        },
+        quantity: {
+          type: Number,
+          default: 1,
+        },
+      },
+    ],
+
     totalAmount: {
       type: Number,
       required: true,
     },
+
+    couponCode: {
+      type: String,
+      default: "",
+    },
+
     status: {
       type: String,
       default: "Pending",

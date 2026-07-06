@@ -25,58 +25,53 @@ export default function Checkout() {5
   const [loading, setLoading] =
     useState(false);
 
-  const totalAmount =
-    cart.reduce(
-      (sum, item) =>
-        sum +
-        item.price *
-          item.quantity,
-      0
+const total = cart.reduce(
+  (sum, item) => sum + item.price * item.quantity,
+  0
+);
+
+const discount = cart.reduce(
+  (sum, item) =>
+    sum +
+    ((item.price * item.quantity * (item.discount || 0)) / 100),
+  0
+);
+
+const finalAmount = total - discount;
+
+const totalAmount = finalAmount;
+
+ const placeOrder = async () => {
+  try {
+    setLoading(true);
+
+    const products = cart.map((item) => ({
+      product: item._id,
+      quantity: item.quantity,
+    }));
+
+    await axios.post(
+      "https://affiliate-marketing-system-o8xz.onrender.com/api/orders",
+      {
+        user: userId,
+        products,
+        totalAmount,
+        couponCode: cart[0]?.couponCode || "",
+      }
     );
 
-  const placeOrder =
-    async () => {
-      try {
-        setLoading(true);
+    localStorage.removeItem("cart");
 
-        const products =
-          cart.map((item) => ({
-            product:
-              item._id,
-            quantity:
-              item.quantity,
-          }));
+    alert("Order Placed Successfully");
 
-        await axios.post(
-          "https://affiliate-marketing-system-o8xz.onrender.com/api/orders",
-          {
-            user: userId,
-            products,
-            totalAmount,
-          }
-        );
-
-        localStorage.removeItem(
-          "cart"
-        );
-
-        alert(
-          "Order Placed Successfully"
-        );
-
-        navigate(
-          "/user/orders"
-        );
-      } catch (err) {
-        console.log(err);
-        alert(
-          "Order Failed"
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
-
+    navigate("/user/orders");
+  } catch (err) {
+    console.log(err);
+    alert("Order Failed");
+  } finally {
+    setLoading(false);
+  }
+};
   return (
   <div className="flex bg-slate-100 min-h-screen">
     <UserSidebar />

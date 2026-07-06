@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import UserSidebar from "../../components/UserSidebar";
 import UserNavbar from "../../components/UserNavbar";
-
+import API from "@/config/api";
 export default function MyOrders() {
   const [orders, setOrders] = useState([]);
 
@@ -10,28 +10,24 @@ export default function MyOrders() {
     fetchOrders();
   }, []);
 
-  const fetchOrders = async () => {
-    try {
-      const user = JSON.parse(
-        localStorage.getItem("user")
-      );
+ const fetchOrders = async () => {
+  try {
+    const user = JSON.parse(localStorage.getItem("user"));
 
-      if (!user) {
-        alert("Please Login");
-        return;
-      }
-
-      const userId = user._id || user.id;
-
-      const res = await axios.get(
-        `https://affiliate-marketing-system-o8xz.onrender.com/api/orders/user/${userId}`
-      );
-
-      setOrders(res.data);
-    } catch (error) {
-      console.log(error);
+    if (!user) {
+      alert("Please Login");
+      return;
     }
-  };
+
+    const userId = user._id || user.id;
+
+    const res = await API.get(`/orders/user/${userId}`);
+
+    setOrders(Array.isArray(res.data) ? res.data : []);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
   return (
     <div className="flex">

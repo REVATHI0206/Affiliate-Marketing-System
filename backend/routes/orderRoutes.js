@@ -75,11 +75,14 @@ router.post("/", async (req, res) => {
 // ============================
 // GET ALL ORDERS
 // ============================
-router.get("/", async (req, res) => {
+router.get("/user/:userId", async (req, res) => {
   try {
-    const orders = await Order.find()
-      .populate("user", "name email")
-      .populate("products.product", "name");
+    const orders = await Order.find({
+      user: req.params.userId,
+    }).populate(
+      "products.product",
+      "name image price category description"
+    );
 
     res.json(orders);
   } catch (error) {
@@ -124,9 +127,11 @@ router.put("/:id", async (req, res) => {
 router.get("/user/:userId", async (req, res) => {
   try {
     const orders = await Order.find({
-      user: req.params.userId,
-    }).populate("products.product");
-
+  user: req.params.userId,
+}).populate({
+  path: "products.product",
+  model: "Product",
+});
     res.json(orders);
   } catch (error) {
     res.status(500).json({
