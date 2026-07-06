@@ -248,7 +248,7 @@ export default function UserProducts() {
             No Products Found
           </div>
         ) : (
-<div className="ml-64 flex-1 min-h-screen bg-gray-100 px-8 py-6 overflow-x-hidden">       {filteredProducts.map((product) => {
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">      {filteredProducts.map((product) => {
               const finalPrice =
                 product.price -
                 (product.price * discount) / 100;
@@ -258,10 +258,11 @@ export default function UserProducts() {
   key={product._id}
   className="relative group overflow-hidden rounded-2xl border bg-white shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-1"
 >
-                  <div className="absolute top-3 left-3 bg-green-600 text-white text-xs px-2 py-1 rounded-full">
+                 {discount > 0 && (
+  <div className="absolute top-3 left-3 bg-green-600 text-white text-xs px-2 py-1 rounded-full">
     {discount}% OFF
-</div>
-
+  </div>
+)}
                   <CardContent className="p-0">
                     
                     <img
@@ -318,11 +319,7 @@ export default function UserProducts() {
   >
     Apply Coupon
   </Button>
-<input />
 
-⭐4.5
-
-<Button></Button>
 </div>
 
                    <Button

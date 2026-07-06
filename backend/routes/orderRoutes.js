@@ -6,9 +6,9 @@ import User from "../models/User.js";
 
 const router = express.Router();
 
-// ============================
+// =====================================
 // PLACE ORDER
-// ============================
+// =====================================
 router.post("/", async (req, res) => {
   try {
     const {
@@ -18,7 +18,6 @@ router.post("/", async (req, res) => {
       couponCode,
     } = req.body;
 
-    // Create Order
     const order = await Order.create({
       user,
       products,
@@ -27,7 +26,7 @@ router.post("/", async (req, res) => {
       status: "Pending",
     });
 
-    // Create Earning if coupon exists
+    // Create earning if coupon is used
     if (couponCode) {
       const coupon = await Coupon.findOne({
         couponCode,
@@ -40,7 +39,6 @@ router.post("/", async (req, res) => {
         });
 
         if (affiliateUser) {
-          // Prevent duplicate earning for the same order
           const existingEarning = await Earning.findOne({
             order: order._id,
           });
@@ -72,29 +70,53 @@ router.post("/", async (req, res) => {
   }
 });
 
-// ============================
-// GET ALL ORDERS
-// ============================
-router.get("/user/:userId", async (req, res) => {
+// =====================================
+// GET ALL ORDERS (Admin)
+// =====================================
+router.get("/", async (req, res) => {
   try {
-    const orders = await Order.find({
-      user: req.params.userId,
-    }).populate(
-      "products.product",
-      "name image price category description"
-    );
+    const orders = await Order.find()
+      .populate("user", "name email")
+      .populate({
+        path: "products.product",
+        model: "Product",
+      });
 
     res.json(orders);
   } catch (error) {
+    console.log(error);
+
     res.status(500).json({
       message: error.message,
     });
   }
 });
 
-// ============================
+// =====================================
+// GET USER ORDERS
+// =====================================
+router.get("/user/:userId", async (req, res) => {
+  try {
+    const orders = await Order.find({
+      user: req.params.userId,
+    }).populate({
+      path: "products.product",
+      model: "Product",
+    });
+
+    res.json(orders);
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+});
+
+// =====================================
 // UPDATE ORDER STATUS
-// ============================
+// =====================================
 router.put("/:id", async (req, res) => {
   try {
     const order = await Order.findByIdAndUpdate(
@@ -115,25 +137,27 @@ router.put("/:id", async (req, res) => {
 
     res.json(order);
   } catch (error) {
+    console.log(error);
+
     res.status(500).json({
       message: error.message,
     });
   }
 });
 
-// ============================
-// GET ORDERS OF A USER
-// ============================
-router.get("/user/:userId", async (req, res) => {
+// =====================================
+// DELETE ORDER
+// =====================================
+router.delete("/:id", async (req, res) => {
   try {
-    const orders = await Order.find({
-  user: req.params.userId,
-}).populate({
-  path: "products.product",
-  model: "Product",
-});
-    res.json(orders);
+    await Order.findByIdAndDelete(req.params.id);
+
+    res.json({
+      message: "Order Deleted Successfully",
+    });
   } catch (error) {
+    console.log(error);
+
     res.status(500).json({
       message: error.message,
     });
