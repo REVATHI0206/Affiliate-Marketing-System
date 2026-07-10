@@ -93,6 +93,7 @@ router.put(
     }
   }
 );
+// ✅ Approve payout (THIS MUST COME FIRST)
 router.put("/approve/:affiliateId", async (req, res) => {
   try {
     await Earning.updateMany(
@@ -116,22 +117,23 @@ router.put("/approve/:affiliateId", async (req, res) => {
     });
   }
 });
-router.put("/approve/:affiliateId", async (req, res) => {
+
+// Update Single Earning
+router.put("/:id", async (req, res) => {
   try {
-    await Earning.updateMany(
+    const earning = await Earning.findByIdAndUpdate(
+      req.params.id,
       {
-        affiliate: req.params.affiliateId,
-        status: "Pending",
+        status: req.body.status,
       },
       {
-        $set: {
-          status: "Paid",
-        },
+        new: true,
       }
     );
 
     res.json({
-      message: "Payout Approved",
+      message: "Payout Updated",
+      earning,
     });
   } catch (error) {
     res.status(500).json({
@@ -139,27 +141,6 @@ router.put("/approve/:affiliateId", async (req, res) => {
     });
   }
 });
-router.put("/approve/:affiliateId", async (req, res) => {
-  try {
-    await Earning.updateMany(
-      {
-        affiliate: req.params.affiliateId,
-        status: "Pending",
-      },
-      {
-        $set: {
-          status: "Paid",
-        },
-      }
-    );
 
-    res.json({
-      message: "Payout Approved",
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-});
+
 export default router;
