@@ -1,4 +1,3 @@
-import { LogOut, Bell, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { LogOut, Bell, Search } from "lucide-react";
 export default function AdminNavbar() {
