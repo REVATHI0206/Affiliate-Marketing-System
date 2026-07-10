@@ -119,7 +119,7 @@ import dns from "node:dns";
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
 import express from "express";
-import cors from "cors";
+
 
 import connectDB from "./config/db.js";
 
@@ -138,23 +138,25 @@ import earningRoutes from "./routes/earningRoutes.js";
 import analyticsRoutes from "./routes/analyticsRoutes.js";
 import ruleRoutes from "./routes/ruleRoutes.js";
 import ruleMappingRoutes from "./routes/ruleMappingRoutes.js";
-
+import cors from "cors";
 // MongoDB Connection
 connectDB();
 
 const app = express();
 
 // Middleware
+
+
 app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://affiliate-marketing-system-o8xz.onrender.com"
+      "https://revathi0206.github.io",
     ],
+    methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
 );
-
 app.use(express.json());
 
 // Test Route
