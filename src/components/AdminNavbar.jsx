@@ -1,6 +1,8 @@
 import { LogOut, Bell, Search } from "lucide-react";
-
+import { useNavigate } from "react-router-dom";
+import { LogOut, Bell, Search } from "lucide-react";
 export default function AdminNavbar() {
+  const navigate = useNavigate();
   return (
     <div className="bg-slate-900 border-b border-slate-700 px-10 py-5 flex justify-between items-center shadow-lg">
 
@@ -71,16 +73,15 @@ export default function AdminNavbar() {
         {/* Logout */}
 
         <button
-          onClick={() => {
-            localStorage.clear();
-            window.location.href = "/";
-          }}
-          className="bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white px-5 py-3 rounded-xl flex items-center gap-2 transition-all shadow-lg"
-        >
-          <LogOut size={18} />
-          Logout
-        </button>
-
+  onClick={() => {
+    localStorage.clear();
+    navigate("/");
+  }}
+  className="bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white px-5 py-3 rounded-xl flex items-center gap-2 transition-all shadow-lg"
+>
+  <LogOut size={18} />
+  Logout
+</button>
       </div>
 
     </div>
