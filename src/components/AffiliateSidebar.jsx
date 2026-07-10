@@ -3,13 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 export default function AffiliateSidebar() {
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    // Clear all stored login data
-    localStorage.clear();
-
-    // Redirect to Login page
-   navigate("/", { replace: true });
-  };
+ const handleLogout = () => {
+  localStorage.clear();
+  navigate("/affiliate/login");
+};
 
   return (
   <div className="fixed top-0 left-0 h-screen w-72 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-800 text-white shadow-2xl flex flex-col">

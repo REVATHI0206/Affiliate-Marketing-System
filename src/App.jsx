@@ -20,7 +20,8 @@ import Orders from "./pages/admin/Orders";
 // Affiliate
 import AffiliateDashboard from "./pages/affiliate/AffiliateDashboard";
 
-
+import AffiliateLogin from "./pages/affiliate/AffiliateLogin";
+import AffiliateRegister from "./pages/affiliate/AffiliateRegister";
 import Coupons from "./pages/affiliate/Coupons";
 import Earnings from "./pages/affiliate/Earnings";
 
@@ -131,6 +132,7 @@ function App() {
       />
 
       {/* Affiliate Routes */}
+      
       <Route
         path="/affiliate/dashboard"
         element={
@@ -170,7 +172,16 @@ function App() {
           </ProtectedRoute>
         }
       /> */}
+     {/* Hidden Affiliate Routes */}
+<Route
+  path="/affiliate/login"
+  element={<AffiliateLogin />}
+/>
 
+<Route
+  path="/affiliate/register"
+  element={<AffiliateRegister />}
+/>
       <Route
         path="/user/products"
         element={

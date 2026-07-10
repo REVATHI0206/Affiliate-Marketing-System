@@ -138,6 +138,7 @@ import earningRoutes from "./routes/earningRoutes.js";
 import analyticsRoutes from "./routes/analyticsRoutes.js";
 import ruleRoutes from "./routes/ruleRoutes.js";
 import ruleMappingRoutes from "./routes/ruleMappingRoutes.js";
+import affiliateAuthRoutes from "./routes/affiliateAuthRoutes.js";
 import cors from "cors";
 // MongoDB Connection
 connectDB();
@@ -180,6 +181,7 @@ app.use("/api/cart", cartRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/earnings", earningRoutes);
 app.use("/api/analytics", analyticsRoutes);
+app.use("/api/affiliate-auth", affiliateAuthRoutes);
 
 // Start Server
 const PORT = process.env.PORT || 5000;

@@ -194,7 +194,7 @@ const deleteAffiliate = async (id) => {
 
           </div>
 
-          <Dialog>
+          {/* <Dialog>
 
             <DialogTrigger asChild>
 
@@ -256,7 +256,7 @@ const deleteAffiliate = async (id) => {
 
             </DialogContent>
 
-          </Dialog>
+          </Dialog> */}
 
         </div>
 
