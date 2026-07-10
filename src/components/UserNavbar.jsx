@@ -34,7 +34,7 @@ export default function UserNavbar() {
 
       <div className="flex items-center gap-4">
 
-        <div className="relative">
+        {/* <div className="relative">
 
           <Search
             size={18}
@@ -46,7 +46,7 @@ export default function UserNavbar() {
             className="pl-10 pr-4 py-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-violet-500 w-64"
           />
 
-        </div>
+        </div> */}
 
         <button className="relative p-3 rounded-xl bg-slate-100 hover:bg-violet-100">
 

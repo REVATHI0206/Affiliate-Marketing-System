@@ -19,9 +19,8 @@ import {
 export default function UserProducts() {
   const [products, setProducts] = useState([]);
 
-  const [couponCode, setCouponCode] = useState("");
-  const [discount, setDiscount] = useState(0);
-
+ const [couponCodes, setCouponCodes] = useState({});
+const [discounts, setDiscounts] = useState({});
   const [search, setSearch] = useState("");
 
   const [category, setCategory] =
@@ -48,64 +47,62 @@ export default function UserProducts() {
     }
   };
 
-  const applyCoupon = async () => {
-    if (!couponCode.trim()) {
-      alert("Enter Coupon");
-      return;
-    }
+  const applyCoupon = async (productId) => {
+  const code = couponCodes[productId];
 
-    try {
-      const res = await API.get(
-        `/coupons/code/${couponCode}`
-      );
+  if (!code) {
+    alert("Enter Coupon");
+    return;
+  }
 
-      setDiscount(
-        Number(res.data.discount)
-      );
+  try {
+    const res = await API.get(`/coupons/code/${code}`);
 
-      alert(
-        `${res.data.discount}% Discount Applied`
-      );
-    } catch (err) {
-      alert("Invalid Coupon");
-    }
-  };
+    setDiscounts((prev) => ({
+      ...prev,
+      [productId]: Number(res.data.discount),
+    }));
 
-  const addToCart = (product) => {
-    const finalPrice =
-      product.price -
-      (product.price * discount) / 100;
+    alert(`${res.data.discount}% Discount Applied`);
+  } catch (err) {
+    console.log(err);
+    alert("Invalid Coupon");
+  }
+};
+const addToCart = (product) => {
+  const discount = discounts[product._id] || 0;
 
-    let cart =
-      JSON.parse(
-        localStorage.getItem("cart")
-      ) || [];
+  const finalPrice =
+    product.price -
+    (product.price * discount) / 100;
 
-    const existing = cart.find(
-      (item) =>
-        item._id === product._id
-    );
+  let cart =
+    JSON.parse(localStorage.getItem("cart")) || [];
 
-    if (existing) {
-      existing.quantity += 1;
-    } else {
-      cart.push({
-        ...product,
-        quantity: 1,
-        couponCode,
-        discount,
-        finalPrice,
-      });
-    }
+  const existing = cart.find(
+    (item) => item._id === product._id
+  );
 
-    localStorage.setItem(
-      "cart",
-      JSON.stringify(cart)
-    );
+  if (existing) {
+    existing.quantity += 1;
+  } else {
+    cart.push({
+      ...product,
+      quantity: 1,
+      couponCode:
+        couponCodes[product._id] || "",
+      discount,
+      finalPrice,
+    });
+  }
 
-    alert("Added To Cart");
-  };
+  localStorage.setItem(
+    "cart",
+    JSON.stringify(cart)
+  );
 
+  alert("Added To Cart");
+};
   const categories = [
     "All",
     ...new Set(
@@ -249,9 +246,11 @@ export default function UserProducts() {
           </div>
         ) : (
 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">      {filteredProducts.map((product) => {
-              const finalPrice =
-                product.price -
-                (product.price * discount) / 100;
+             const discount = discounts[product._id] || 0;
+
+const finalPrice =
+  product.price -
+  (product.price * discount) / 100;
 
               return (
                 <Card
@@ -307,16 +306,20 @@ export default function UserProducts() {
                       <div className="flex gap-3 mb-6">
 
   <Input
-    placeholder="Enter Coupon Code"
-    value={couponCode}
-    onChange={(e) => setCouponCode(e.target.value)}
-    className="w-72"
-  />
-
+  placeholder="Enter Coupon Code"
+  value={couponCodes[product._id] || ""}
+  onChange={(e) =>
+    setCouponCodes((prev) => ({
+      ...prev,
+      [product._id]: e.target.value,
+    }))
+  }
+  className="w-72"
+/>
   <Button
-    onClick={applyCoupon}
-    className="bg-green-600 hover:bg-green-700"
-  >
+  onClick={() => applyCoupon(product._id)}
+  className="bg-green-600 hover:bg-green-700"
+>
     Apply Coupon
   </Button>
 

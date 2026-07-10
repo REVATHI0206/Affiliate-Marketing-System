@@ -18,11 +18,11 @@ export default function UserSidebar() {
   };
 
   const menus = [
-    {
-      name: "Dashboard",
-      path: "/user/dashboard",
-      icon: <LayoutDashboard size={20} />,
-    },
+    // {
+    //   name: "Dashboard",
+    //   path: "/user/dashboard",
+    //   icon: <LayoutDashboard size={20} />,
+    // },
     {
       name: "Products",
       path: "/user/products",
@@ -53,11 +53,11 @@ export default function UserSidebar() {
         <div className="text-center">
 
           <div className="w-20 h-20 rounded-full bg-white text-violet-700 flex items-center justify-center text-3xl font-bold mx-auto">
-            A
+            😎
           </div>
 
           <h1 className="text-2xl font-bold mt-4">
-            Affiliate Shop
+            IPHONE ZONE
           </h1>
 
           <p className="text-violet-200 text-sm">

@@ -93,5 +93,50 @@ router.put(
     }
   }
 );
+router.put("/approve/:affiliateId", async (req, res) => {
+  try {
+    await Earning.updateMany(
+      {
+        affiliate: req.params.affiliateId,
+        status: "Pending",
+      },
+      {
+        $set: {
+          status: "Paid",
+        },
+      }
+    );
 
+    res.json({
+      message: "Payout Approved",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+});
+router.put("/approve/:affiliateId", async (req, res) => {
+  try {
+    await Earning.updateMany(
+      {
+        affiliate: req.params.affiliateId,
+        status: "Pending",
+      },
+      {
+        $set: {
+          status: "Paid",
+        },
+      }
+    );
+
+    res.json({
+      message: "Payout Approved",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+});
 export default router;

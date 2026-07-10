@@ -59,7 +59,7 @@ function Login() {
       } else if (role === "affiliate") {
         navigate("/affiliate/dashboard");
       } else if (role === "user") {
-        navigate("/user/dashboard");
+       navigate("/user/products");
       } else {
         alert("Invalid Role");
       }

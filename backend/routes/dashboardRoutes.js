@@ -1,42 +1,34 @@
 import express from "express";
-import Affiliate from "../models/Affiliate.js";
-import Coupon from "../models/Coupon.js";
+import Product from "../models/Product.js";
+import Order from "../models/Order.js";
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+router.get("/user/:userId", async (req, res) => {
   try {
-    const totalAffiliates =
-      await Affiliate.countDocuments();
+    const { userId } = req.params;
 
-    const totalCoupons =
-      await Coupon.countDocuments();
+    const totalProducts = await Product.countDocuments();
 
-      
+    const orders = await Order.find({ user: userId });
 
-    const earnings =
-      await Affiliate.aggregate([
-        {
-          $group: {
-            _id: null,
-            total: {
-              $sum: "$earnings",
-            },
-          },
-        },
-      ]);
+    const totalOrders = orders.length;
+
+    const totalSpent = orders.reduce(
+      (sum, order) => sum + order.totalAmount,
+      0
+    );
 
     res.json({
-      totalAffiliates,
-      totalCoupons,
-     
-      
-      totalEarnings:
-        earnings[0]?.total || 0,
+      totalProducts,
+      totalOrders,
+      totalSpent,
+      recentOrders: orders.slice(-5).reverse(),
     });
-  } catch (error) {
+  } catch (err) {
+    console.log(err);
     res.status(500).json({
-      message: error.message,
+      message: err.message,
     });
   }
 });

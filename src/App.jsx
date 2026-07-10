@@ -25,7 +25,7 @@ import Coupons from "./pages/affiliate/Coupons";
 import Earnings from "./pages/affiliate/Earnings";
 
 // User
-import UserDashboard from "./pages/user/UserDashboard";
+
 import UserProducts from "./pages/user/UserProducts";
 import Cart from "./pages/user/Cart";
 import Checkout from "./pages/user/Checkout";
@@ -162,14 +162,14 @@ function App() {
       />
 
       {/* User Routes */}
-      <Route
+      {/* <Route
         path="/user/dashboard"
         element={
           <ProtectedRoute role="user">
             <UserDashboard />
           </ProtectedRoute>
         }
-      />
+      /> */}
 
       <Route
         path="/user/products"

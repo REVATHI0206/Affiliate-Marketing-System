@@ -19,7 +19,7 @@ function Register() {
     email: "",
     password: "",
     confirmPassword: "",
-    role: "affiliate",
+    role: "user",
     referralCode: "",
   });
 
@@ -30,22 +30,20 @@ function Register() {
     });
   };
 
-  const handleSubmit = async () => {
+ const handleSubmit = async () => {
   if (formData.password !== formData.confirmPassword) {
     alert("Passwords do not match");
     return;
   }
 
   try {
-    const res = await axios.post(`${API}/api/auth/register`, formData,
-      {
-        name: formData.name,
-        email: formData.email,
-        password: formData.password,
-        role: formData.role,
-        referralCode: formData.referralCode,
-      }
-    );
+    const res = await API.post("/auth/register", {
+      name: formData.name,
+      email: formData.email,
+      password: formData.password,
+      role: formData.role,
+      referralCode: formData.referralCode,
+    });
 
     alert(res.data.message);
     navigate("/");
@@ -57,7 +55,6 @@ function Register() {
     );
   }
 };
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-100">
       <Card className="w-[450px]">
@@ -100,7 +97,7 @@ function Register() {
           />
 
           {/* Role Selection */}
-           <select
+           {/* <select
             name="role"
             value={formData.role}
             onChange={handleChange}
@@ -115,7 +112,7 @@ function Register() {
             <option value="user">
               User
             </option>
-          </select> *
+          </select> * */}
 
           <Input
             placeholder="Referral Code (Optional)"

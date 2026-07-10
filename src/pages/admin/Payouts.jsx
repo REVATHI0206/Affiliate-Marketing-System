@@ -11,60 +11,62 @@ export default function Payouts() {
   }, []);
 
   const fetchPayouts = async () => {
-    try {
-      const res = await fetch(
-        "https://affiliate-marketing-system-o8xz.onrender.com/api/earnings"
-      );
+  try {
+    const res = await fetch(
+      "https://affiliate-marketing-system-o8xz.onrender.com/api/earnings"
+    );
 
-      const data = await res.json();
+    const data = await res.json();
 
-      const payoutData = data.map((item) => ({
-        id: item._id,
-        affiliate:
-          item.affiliate?.name || "N/A",
-        customer:
-          item.customer?.name || "N/A",
-        commission: item.amount,
-        paid:
-          item.status === "Paid"
-            ? item.amount
-            : 0,
-        pending:
-          item.status === "Pending"
-            ? item.amount
-            : 0,
-        status: item.status,
-      }));
+    const grouped = {};
 
-      setPayouts(payoutData);
-    } catch (error) {
-      console.log(error);
-    }
+    data.forEach((item) => {
+      const affiliateId = item.affiliate?._id;
+
+    if (!grouped[affiliateId]) {
+  grouped[affiliateId] = {
+    id: item._id, // Earning ID
+    affiliateId,
+    affiliate: item.affiliate?.name || "N/A",
+    customer: item.customer?.name || "N/A",
+    commission: 0,
+    paid: 0,
+    pending: 0,
+    status: "Paid",
   };
+}
 
-  const approvePayout = async (id) => {
-    try {
-      await fetch(
-        `http://localhost:5000/api/earnings/${id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type":
-              "application/json",
-          },
-          body: JSON.stringify({
-            status: "Paid",
-          }),
-        }
-      );
+      grouped[affiliateId].commission += item.amount;
 
-      alert("Payout Approved");
-      fetchPayouts();
-    } catch (error) {
-      console.log(error);
-    }
-  };
+      if (item.status === "Paid") {
+        grouped[affiliateId].paid += item.amount;
+      } else {
+        grouped[affiliateId].pending += item.amount;
+        grouped[affiliateId].status = "Pending";
+      }
+    });
 
+    setPayouts(Object.values(grouped));
+
+  } catch (error) {
+    console.log(error);
+  }
+};
+const approvePayout = async (affiliateId) => {
+  try {
+    await fetch(
+      `https://affiliate-marketing-system-o8xz.onrender.com/api/earnings/approve/${affiliateId}`,
+      {
+        method: "PUT",
+      }
+    );
+
+    alert("Payout Approved");
+    fetchPayouts();
+  } catch (error) {
+    console.log(error);
+  }
+};
   return (
     <div className="flex">
       <AdminSidebar />
@@ -108,10 +110,9 @@ export default function Payouts() {
                   </tr>
                 </thead>
 
-                <tbody>
-                  {payouts.map((item) => (
-                    <tr
-                      key={item.id}
+               <tbody>
+  {payouts.map((item, index) => (
+    <tr key={index}
                       className="border-b hover:bg-slate-50"
                     >
                       <td className="py-4">
@@ -166,11 +167,7 @@ export default function Payouts() {
                         {item.status ===
                         "Pending" ? (
                           <button
-                            onClick={() =>
-                              approvePayout(
-                                item.id
-                              )
-                            }
+                            onClick={() => approvePayout(item.id)}
                             className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
                           >
                             Approve

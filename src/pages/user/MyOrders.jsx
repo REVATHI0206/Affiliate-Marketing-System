@@ -40,7 +40,7 @@ export default function MyOrders() {
           My Orders
         </h1>
 
-        {orders.length === 0 ? (
+       {orders.length === 0 ? (
           <div className="bg-white p-6 rounded-xl shadow">
             <h2 className="text-gray-500">
               No Orders Found
