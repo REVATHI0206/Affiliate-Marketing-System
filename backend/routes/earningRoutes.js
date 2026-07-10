@@ -119,28 +119,56 @@ router.put("/approve/:affiliateId", async (req, res) => {
 });
 
 // Update Single Earning
-router.put("/:id", async (req, res) => {
+router.put("/approve/:affiliateId", async (req, res) => {
   try {
-    const earning = await Earning.findByIdAndUpdate(
-      req.params.id,
+    const result = await Earning.updateMany(
       {
-        status: req.body.status,
+        affiliate: req.params.affiliateId,
+        status: "Pending",
       },
       {
-        new: true,
+        $set: {
+          status: "Paid",
+        },
       }
     );
 
     res.json({
-      message: "Payout Updated",
-      earning,
+      message: "Payout Approved",
+      result,
     });
+
   } catch (error) {
     res.status(500).json({
       message: error.message,
     });
   }
 });
+router.put("/approve/:affiliateId", async (req, res) => {
+  try {
+    const result = await Earning.updateMany(
+      {
+        affiliate: req.params.affiliateId,
+        status: "Pending",
+      },
+      {
+        $set: {
+          status: "Paid",
+        },
+      }
+    );
 
+    console.log(result);
 
+    res.json({
+      message: "Payout Approved",
+      result,
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+});
 export default router;

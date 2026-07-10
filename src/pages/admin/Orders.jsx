@@ -44,95 +44,195 @@ const updateStatus = async (id, status) => {
 };
 
   return (
-    <div className="flex">
-      <AdminSidebar />
+  <div className="flex bg-gradient-to-br from-slate-950 via-slate-900 to-black min-h-screen">
 
-      <div className="ml-64 flex-1 bg-slate-100 min-h-screen">
-        <AdminNavbar />
+    <AdminSidebar />
 
-        <div className="p-8">
-          <h1 className="text-3xl font-bold mb-8">
-            Orders
-          </h1>
+    <div className="ml-72 flex-1">
 
-          {loading ? (
-            <p className="text-center text-gray-500">
-              Loading Orders...
+      <AdminNavbar />
+
+      <div className="p-10">
+
+        {/* Header */}
+
+        <div className="flex justify-between items-center mb-10">
+
+          <div>
+
+            <h1 className="text-5xl font-bold text-white">
+              📦 Orders
+            </h1>
+
+            <p className="text-slate-400 mt-2">
+              Track and manage customer orders
             </p>
-          ) : orders.length === 0 ? (
-            <p className="text-center text-gray-500">
-              No Orders Found
+
+          </div>
+
+          <div className="bg-gradient-to-r from-cyan-500 to-indigo-600 rounded-2xl px-6 py-4 shadow-xl">
+
+            <p className="text-cyan-100 text-sm">
+              Total Orders
             </p>
-          ) : (
-            <div className="space-y-4">
-              {orders.map((order) => (
-                <Card key={order._id}>
-                  <CardContent className="p-6">
-                    <h2 className="font-bold text-lg">
-                      Customer : {order.user?.name}
+
+            <h2 className="text-3xl font-bold text-white">
+              {orders.length}
+            </h2>
+
+          </div>
+
+        </div>
+
+        {loading ? (
+
+          <div className="text-center text-slate-400 text-xl py-20">
+            Loading Orders...
+          </div>
+
+        ) : orders.length === 0 ? (
+
+          <div className="bg-slate-900 rounded-3xl p-16 text-center text-slate-400 shadow-xl">
+            📭 No Orders Found
+          </div>
+
+        ) : (
+
+          <div className="space-y-8">
+
+            {orders.map((order) => (
+
+              <div
+                key={order._id}
+                className="bg-slate-900 border border-slate-700 rounded-3xl shadow-2xl overflow-hidden"
+              >
+
+                {/* Top */}
+
+                <div className="flex justify-between items-center px-8 py-6 border-b border-slate-700">
+
+                  <div>
+
+                    <h2 className="text-2xl font-bold text-white">
+                      👤 {order.user?.name}
                     </h2>
 
-                    <p>Email : {order.user?.email}</p>
-
-                    <p className="mt-2">
-                      Total : ₹{order.totalAmount}
+                    <p className="text-slate-400">
+                      {order.user?.email}
                     </p>
 
-                    <p className="mt-2">
-                      Status :
-                      <span className="ml-2 font-semibold text-blue-600">
-                        {order.status}
-                      </span>
+                  </div>
+
+                  <div className="text-right">
+
+                    <p className="text-green-400 text-3xl font-bold">
+                      ₹{order.totalAmount}
                     </p>
 
-                    <div className="flex gap-3 flex-wrap mt-4">
-                      <Button
-                        onClick={() =>
-                          updateStatus(order._id, "Confirmed")
-                        }
+                    <span
+                      className={`px-4 py-2 rounded-full text-sm font-semibold ${
+                        order.status === "Delivered"
+                          ? "bg-green-500/20 text-green-400"
+                          : order.status === "Shipped"
+                          ? "bg-blue-500/20 text-blue-400"
+                          : order.status === "Confirmed"
+                          ? "bg-yellow-500/20 text-yellow-300"
+                          : "bg-red-500/20 text-red-400"
+                      }`}
+                    >
+                      {order.status}
+                    </span>
+
+                  </div>
+
+                </div>
+
+                {/* Products */}
+
+                <div className="p-8">
+
+                  <h3 className="text-xl text-white font-semibold mb-5">
+                    🛍 Products
+                  </h3>
+
+                  <div className="space-y-4">
+
+                    {order.products?.map((item, index) => (
+
+                      <div
+                        key={index}
+                        className="flex justify-between items-center bg-slate-800 rounded-2xl p-5"
                       >
-                        Confirm
-                      </Button>
 
-                      <Button
-                        onClick={() =>
-                          updateStatus(order._id, "Shipped")
-                        }
-                      >
-                        Ship
-                      </Button>
+                        <div>
 
-                      <Button
-                        onClick={() =>
-                          updateStatus(order._id, "Delivered")
-                        }
-                      >
-                        Deliver
-                      </Button>
-                    </div>
+                          <h4 className="text-white font-semibold">
+                            {item.product?.name}
+                          </h4>
 
-                    <div className="mt-6">
-                      <h3 className="font-semibold mb-2">
-                        Products
-                      </h3>
-
-                      {order.products?.length > 0 ? (
-                        order.products.map((item, index) => (
-                          <p key={index} className="py-1">
-                            {item.product?.name} × {item.quantity}
+                          <p className="text-slate-400">
+                            Quantity : {item.quantity}
                           </p>
-                        ))
-                      ) : (
-                        <p>No Products</p>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          )}
-        </div>
+
+                        </div>
+
+                        <div className="text-cyan-400 font-bold">
+                          × {item.quantity}
+                        </div>
+
+                      </div>
+
+                    ))}
+
+                  </div>
+
+                  {/* Buttons */}
+
+                  <div className="flex gap-4 mt-8 flex-wrap">
+
+                    <button
+                      onClick={() =>
+                        updateStatus(order._id, "Confirmed")
+                      }
+                      className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:scale-105 transition px-6 py-3 rounded-xl font-semibold text-white shadow-lg"
+                    >
+                      ✔ Confirm
+                    </button>
+
+                    <button
+                      onClick={() =>
+                        updateStatus(order._id, "Shipped")
+                      }
+                      className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:scale-105 transition px-6 py-3 rounded-xl font-semibold text-white shadow-lg"
+                    >
+                      🚚 Ship
+                    </button>
+
+                    <button
+                      onClick={() =>
+                        updateStatus(order._id, "Delivered")
+                      }
+                      className="bg-gradient-to-r from-green-500 to-emerald-600 hover:scale-105 transition px-6 py-3 rounded-xl font-semibold text-white shadow-lg"
+                    >
+                      ✅ Deliver
+                    </button>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            ))}
+
+          </div>
+
+        )}
+
       </div>
+
     </div>
-  );
+
+  </div>
+);
 }

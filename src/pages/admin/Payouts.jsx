@@ -23,18 +23,15 @@ export default function Payouts() {
     data.forEach((item) => {
       const affiliateId = item.affiliate?._id;
 
-    if (!grouped[affiliateId]) {
   grouped[affiliateId] = {
-    id: item._id, // Earning ID
-    affiliateId,
-    affiliate: item.affiliate?.name || "N/A",
-    customer: item.customer?.name || "N/A",
-    commission: 0,
-    paid: 0,
-    pending: 0,
-    status: "Paid",
-  };
-}
+  affiliateId: affiliateId,
+  affiliate: item.affiliate?.name || "N/A",
+  customer: item.customer?.name || "N/A",
+  commission: 0,
+  paid: 0,
+  pending: 0,
+  status: "Paid",
+};
 
       grouped[affiliateId].commission += item.amount;
 
@@ -53,151 +50,206 @@ export default function Payouts() {
   }
 };
 const approvePayout = async (affiliateId) => {
-  try {
-    await fetch(
-      `https://affiliate-marketing-system-o8xz.onrender.com/api/earnings/approve/${affiliateId}`,
-      {
-        method: "PUT",
-      }
-    );
-
-    alert("Payout Approved");
-    fetchPayouts();
-  } catch (error) {
-    console.log(error);
-  }
-};
-  return (
-    <div className="flex">
-      <AdminSidebar />
-
-      <div className="ml-64 flex-1 bg-slate-100 min-h-screen">
-        <AdminNavbar />
-
-        <div className="p-8">
-          <h1 className="text-3xl font-bold mb-2">
-            Affiliate Payouts
-          </h1>
-
-          <p className="text-slate-500 mb-6">
-            Manage affiliate commissions
-          </p>
-
-          <Card>
-            <CardContent className="p-6 overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b text-left">
-                    <th className="py-3">
-                      Affiliate
-                    </th>
-                    <th>
-                      Customer
-                    </th>
-                    <th>
-                      Commission
-                    </th>
-                    <th>Paid</th>
-                    <th>
-                      Pending
-                    </th>
-                    <th>
-                      Status
-                    </th>
-                    <th>
-                      Action
-                    </th>
-                  </tr>
-                </thead>
-
-               <tbody>
-  {payouts.map((item, index) => (
-    <tr key={index}
-                      className="border-b hover:bg-slate-50"
-                    >
-                      <td className="py-4">
-                        {
-                          item.affiliate
-                        }
-                      </td>
-
-                      <td>
-                        {
-                          item.customer
-                        }
-                      </td>
-
-                      <td>
-                        ₹
-                        {
-                          item.commission
-                        }
-                      </td>
-
-                      <td className="text-green-600">
-                        ₹
-                        {
-                          item.paid
-                        }
-                      </td>
-
-                      <td className="text-orange-500">
-                        ₹
-                        {
-                          item.pending
-                        }
-                      </td>
-
-                      <td>
-                        <span
-                          className={`px-3 py-1 rounded-full text-sm ${
-                            item.status ===
-                            "Paid"
-                              ? "bg-green-100 text-green-700"
-                              : "bg-orange-100 text-orange-700"
-                          }`}
-                        >
-                          {
-                            item.status
-                          }
-                        </span>
-                      </td>
-
-                      <td>
-                        {item.status ===
-                        "Pending" ? (
-                          <button
-                            onClick={() => approvePayout(item.id)}
-                            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-                          >
-                            Approve
-                          </button>
-                        ) : (
-                          <span className="text-green-600 font-semibold">
-                            Completed
-                          </span>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-
-                  {payouts.length ===
-                    0 && (
-                    <tr>
-                      <td
-                        colSpan="7"
-                        className="text-center py-8 text-slate-500"
-                      >
-                        No Payouts Found
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    </div>
+  const res = await fetch(
+    `https://affiliate-marketing-system-o8xz.onrender.com/api/earnings/approve/${affiliateId}`,
+    {
+      method: "PUT",
+    }
   );
+
+  const data = await res.json();
+  console.log(data);
+
+  fetchPayouts();
+  console.log("Affiliate ID:", affiliateId);
+};
+ return (
+  <div className="flex bg-gradient-to-br from-slate-950 via-slate-900 to-black min-h-screen">
+
+    <AdminSidebar />
+
+    <div className="ml-72 flex-1">
+
+      <AdminNavbar />
+
+      <div className="p-10">
+
+        {/* Header */}
+
+        <div className="flex justify-between items-center mb-10">
+
+          <div>
+
+            <h1 className="text-5xl font-bold text-white">
+              💸 Affiliate Payouts
+            </h1>
+
+            <p className="text-slate-400 mt-2">
+              Review and approve affiliate commissions
+            </p>
+
+          </div>
+
+          <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-8 py-4 rounded-2xl shadow-xl">
+            <h2 className="text-lg font-bold">
+              Total Payouts
+            </h2>
+
+            <p className="text-sm opacity-80">
+              Live Updates
+            </p>
+
+          </div>
+
+        </div>
+
+        {/* Table */}
+
+        <div className="bg-slate-900 border border-slate-700 rounded-3xl shadow-2xl overflow-hidden">
+
+          <table className="w-full text-white">
+
+            <thead className="bg-slate-800">
+
+              <tr>
+
+                <th className="py-5 px-6 text-left">
+                  Affiliate
+                </th>
+
+                <th className="text-left">
+                  Customer
+                </th>
+
+                <th className="text-left">
+                  Commission
+                </th>
+
+                <th className="text-left">
+                  Paid
+                </th>
+
+                <th className="text-left">
+                  Pending
+                </th>
+
+                <th className="text-left">
+                  Status
+                </th>
+
+                <th className="text-center">
+                  Action
+                </th>
+
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+              {payouts.map((item) => (
+
+                <tr
+                  key={item.affiliateId}
+                  className="border-b border-slate-700 hover:bg-slate-800 transition-all duration-300"
+                >
+
+                  <td className="px-6 py-5">
+
+                    <div className="flex items-center gap-4">
+
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-r from-violet-500 to-pink-500 flex items-center justify-center text-lg font-bold">
+                        {item.affiliate?.charAt(0).toUpperCase()}
+                      </div>
+
+                      <span className="font-semibold">
+                        {item.affiliate}
+                      </span>
+
+                    </div>
+
+                  </td>
+
+                  <td className="text-slate-300">
+                    {item.customer}
+                  </td>
+
+                  <td className="font-semibold text-cyan-400">
+                    ₹{item.commission}
+                  </td>
+
+                  <td className="font-semibold text-green-400">
+                    ₹{item.paid}
+                  </td>
+
+                  <td className="font-semibold text-orange-400">
+                    ₹{item.pending}
+                  </td>
+
+                  <td>
+
+                    <span
+                      className={`px-4 py-2 rounded-full text-sm font-semibold ${
+                        item.status === "Paid"
+                          ? "bg-green-500/20 text-green-400"
+                          : "bg-yellow-500/20 text-yellow-400"
+                      }`}
+                    >
+                      {item.status}
+                    </span>
+
+                  </td>
+
+                  <td className="text-center">
+
+                    {item.status === "Pending" ? (
+
+                      <button
+                        onClick={() => approvePayout(item.affiliateId)}
+                        className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 px-5 py-2 rounded-xl font-semibold shadow-lg"
+                      >
+                        ✅ Approve
+                      </button>
+
+                    ) : (
+
+                      <span className="bg-green-500/20 text-green-400 px-4 py-2 rounded-full font-semibold">
+                        ✔ Completed
+                      </span>
+
+                    )}
+
+                  </td>
+
+                </tr>
+
+              ))}
+
+              {payouts.length === 0 && (
+
+                <tr>
+
+                  <td
+                    colSpan="7"
+                    className="text-center py-10 text-slate-400"
+                  >
+                    🚫 No Payouts Found
+                  </td>
+
+                </tr>
+
+              )}
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+);
 }

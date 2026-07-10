@@ -97,35 +97,54 @@ await API.delete(`/coupons/${id}`);
   };
 
   return (
-    <div className="flex">
-      <AffiliateSidebar />
+  <div className="flex bg-gradient-to-br from-slate-950 via-slate-900 to-black min-h-screen">
 
-      <div className="ml-64 flex-1 p-8 bg-slate-100 min-h-screen">
-        <h1 className="text-3xl font-bold mb-2">
-          My Coupons
-        </h1>
+    <AffiliateSidebar />
 
-        <p className="text-slate-500 mb-6">
-          Create and manage your coupons
-        </p>
+    <div className="ml-72 flex-1 p-10">
 
-        <div className="bg-white p-6 rounded-xl shadow mb-6">
-          <h2 className="text-xl font-semibold mb-4">
-            Create Coupon
-          </h2>
+      {/* Header */}
+
+      <div className="flex justify-between items-center mb-10">
+
+        <div>
+          <h1 className="text-4xl font-bold text-white">
+            🎟 My Coupons
+          </h1>
+
+          <p className="text-slate-400 mt-2">
+            Create and manage your affiliate coupons.
+          </p>
+        </div>
+
+        <div className="bg-cyan-500 px-6 py-3 rounded-2xl shadow-xl text-white font-semibold">
+          {coupons.length} Coupons
+        </div>
+
+      </div>
+
+      {/* Create Coupon */}
+
+      <div className="bg-slate-900 border border-slate-700 rounded-3xl shadow-2xl p-8 mb-8">
+
+        <h2 className="text-2xl font-bold text-white mb-6">
+          ➕ Create New Coupon
+        </h2>
+
+        <div className="grid md:grid-cols-2 gap-6">
 
           <input
             type="text"
-            placeholder="Coupon Code"
+            placeholder="Enter Coupon Code"
             value={couponCode}
             onChange={(e) => setCouponCode(e.target.value)}
-            className="border p-2 rounded w-full mb-3"
+            className="bg-slate-800 border border-slate-700 text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-cyan-500"
           />
 
           <select
             value={selectedRule}
             onChange={(e) => setSelectedRule(e.target.value)}
-            className="border p-2 rounded w-full mb-3"
+            className="bg-slate-800 border border-slate-700 text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-cyan-500"
           >
             <option value="">Select Rule</option>
 
@@ -136,79 +155,133 @@ await API.delete(`/coupons/${id}`);
             ))}
           </select>
 
-          <button
-            onClick={createCoupon}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
-          >
-            Create Coupon
-          </button>
         </div>
 
-        <div className="bg-white p-6 rounded-xl shadow">
-          <table className="w-full">
-            <thead>
-              <tr>
-                <th className="text-left py-2">Coupon</th>
-                <th className="text-left py-2">Rule</th>
-                <th className="text-left py-2">Status</th>
-                <th className="text-left py-2">Action</th>
-              </tr>
-            </thead>
+        <button
+          onClick={createCoupon}
+          className="mt-6 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white px-8 py-3 rounded-xl shadow-lg transition duration-300"
+        >
+          Create Coupon 🚀
+        </button>
 
-            <tbody>
-              {loading ? (
-                <tr>
-                  <td
-                    colSpan="4"
-                    className="text-center py-6"
-                  >
-                    Loading...
-                  </td>
-                </tr>
-              ) : coupons.length > 0 ? (
-                coupons.map((coupon) => (
-                  <tr
-                    key={coupon._id}
-                    className="border-b hover:bg-slate-50"
-                  >
-                    <td className="py-4">
-                      {coupon.couponCode}
-                    </td>
-
-                    <td>{coupon.rule}</td>
-
-                    <td>
-                      <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full">
-                        {coupon.status}
-                      </span>
-                    </td>
-
-                    <td>
-                      <button
-                        onClick={() =>
-                          deleteCoupon(coupon._id)
-                        }
-                        className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td
-                    colSpan="4"
-                    className="text-center py-6 text-gray-500"
-                  >
-                    No Coupons Found
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
       </div>
+
+      {/* Coupon Table */}
+
+      <div className="bg-slate-900 border border-slate-700 rounded-3xl shadow-2xl overflow-hidden">
+
+        <div className="px-8 py-6 border-b border-slate-700">
+
+          <h2 className="text-2xl font-bold text-white">
+            📋 Coupon List
+          </h2>
+
+        </div>
+
+        <table className="w-full">
+
+          <thead className="bg-slate-800">
+
+            <tr className="text-slate-300">
+
+              <th className="text-left py-4 px-6">
+                Coupon
+              </th>
+
+              <th className="text-left px-6">
+                Rule
+              </th>
+
+              <th className="text-left px-6">
+                Status
+              </th>
+
+              <th className="text-left px-6">
+                Action
+              </th>
+
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            {loading ? (
+
+              <tr>
+
+                <td
+                  colSpan="4"
+                  className="text-center py-8 text-slate-400"
+                >
+                  Loading...
+                </td>
+
+              </tr>
+
+            ) : coupons.length > 0 ? (
+
+              coupons.map((coupon) => (
+
+                <tr
+                  key={coupon._id}
+                  className="border-b border-slate-800 hover:bg-slate-800 transition"
+                >
+
+                  <td className="px-6 py-5 text-white font-semibold">
+                    {coupon.couponCode}
+                  </td>
+
+                  <td className="px-6 text-slate-300">
+                    {coupon.rule}
+                  </td>
+
+                  <td className="px-6">
+
+                    <span className="bg-green-500/20 text-green-400 px-4 py-1 rounded-full text-sm">
+                      {coupon.status}
+                    </span>
+
+                  </td>
+
+                  <td className="px-6">
+
+                    <button
+                      onClick={() => deleteCoupon(coupon._id)}
+                      className="bg-red-500 hover:bg-red-600 px-5 py-2 rounded-lg text-white transition"
+                    >
+                      Delete
+                    </button>
+
+                  </td>
+
+                </tr>
+
+              ))
+
+            ) : (
+
+              <tr>
+
+                <td
+                  colSpan="4"
+                  className="text-center py-10 text-slate-400"
+                >
+                  🚫 No Coupons Found
+                </td>
+
+              </tr>
+
+            )}
+
+          </tbody>
+
+        </table>
+
+      </div>
+
     </div>
-  );
+
+  </div>
+);
 }

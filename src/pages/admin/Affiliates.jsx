@@ -168,70 +168,72 @@ const deleteAffiliate = async (id) => {
   }
 };
   return (
-    <div className="flex">
-      <AdminSidebar />
+  <div className="flex bg-gradient-to-br from-slate-950 via-slate-900 to-black min-h-screen">
 
-      <div className="ml-64 flex-1 bg-slate-100 min-h-screen p-6">
-        <AdminNavbar />
+    <AdminSidebar />
 
-        <div className="flex justify-between items-center mb-6">
+    <div className="ml-72 flex-1">
+
+      <AdminNavbar />
+
+      <div className="p-10">
+
+        {/* Header */}
+
+        <div className="flex justify-between items-center mb-10">
+
           <div>
-            <h1 className="text-3xl font-bold">
-              Affiliates
+
+            <h1 className="text-5xl font-bold text-white">
+              🤝 Affiliates
             </h1>
 
-            <p className="text-slate-500">
-              Manage affiliate users
+            <p className="text-slate-400 mt-2">
+              Manage affiliate users and their earnings
             </p>
+
           </div>
 
           <Dialog>
+
             <DialogTrigger asChild>
-              <Button>
-                + Add Affiliate
+
+              <Button className="bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 rounded-xl px-6 py-6 text-lg shadow-xl">
+                ➕ Add Affiliate
               </Button>
+
             </DialogTrigger>
 
-            <DialogContent>
+            <DialogContent className="rounded-2xl">
+
               <DialogHeader>
-                <DialogTitle>
+
+                <DialogTitle className="text-2xl">
                   Create Affiliate
                 </DialogTitle>
+
               </DialogHeader>
 
               <div className="space-y-4">
+
                 <Input
                   placeholder="Affiliate Name"
                   value={name}
-                  onChange={(e) =>
-                    setName(
-                      e.target.value
-                    )
-                  }
+                  onChange={(e) => setName(e.target.value)}
                 />
 
                 <Input
                   placeholder="Email Address"
                   value={email}
-                  onChange={(e) =>
-                    setEmail(
-                      e.target.value
-                    )
-                  }
+                  onChange={(e) => setEmail(e.target.value)}
                 />
 
                 <select
-                  className="w-full border rounded-md p-2"
+                  className="w-full border rounded-xl p-3"
                   value={rule}
-                  onChange={(e) =>
-                    setRule(
-                      e.target.value
-                    )
-                  }
+                  onChange={(e) => setRule(e.target.value)}
                 >
-                  <option value="">
-                    Select Rule
-                  </option>
+                  <option value="">Select Rule</option>
 
                   {rules.map((r) => (
                     <option
@@ -244,92 +246,147 @@ const deleteAffiliate = async (id) => {
                 </select>
 
                 <Button
-                  className="w-full"
+                  className="w-full bg-violet-600 hover:bg-violet-700 rounded-xl"
                   onClick={saveAffiliate}
                 >
                   Save Affiliate
                 </Button>
+
               </div>
+
             </DialogContent>
+
           </Dialog>
+
         </div>
-         
-        <Card>
-          <CardContent className="p-6">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b text-left">
-                  <th className="py-3">
-                    Name
-                  </th>
 
-                  <th>Email</th>
+        {/* Table */}
 
-                  <th>Coupon</th>
+        <div className="bg-slate-900 border border-slate-700 rounded-3xl shadow-2xl overflow-hidden">
 
-                  <th>Rule</th>
+          <table className="w-full text-white">
 
-                  <th>Earnings</th>
-<th>Action</th>
-                </tr>
-              </thead>
+            <thead className="bg-slate-800">
 
-              <tbody>
-                {affiliates.map(
-                  (item) => (
-                    <tr
-                      key={item._id}
-                      className="border-b hover:bg-slate-50"
-                    >
-                      <td className="py-4">
+              <tr>
+
+                <th className="py-5 px-6 text-left">
+                  Affiliate
+                </th>
+
+                <th className="text-left">
+                  Email
+                </th>
+
+                <th className="text-left">
+                  Coupon
+                </th>
+
+                <th className="text-left">
+                  Rule
+                </th>
+
+                <th className="text-left">
+                  Earnings
+                </th>
+
+                <th className="text-center">
+                  Action
+                </th>
+
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+              {affiliates.map((item) => (
+
+                <tr
+                  key={item._id}
+                  className="border-b border-slate-700 hover:bg-slate-800 transition duration-300"
+                >
+
+                  <td className="px-6 py-5">
+
+                    <div className="flex items-center gap-4">
+
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-r from-violet-500 to-pink-500 flex items-center justify-center font-bold text-lg">
+                        {item.name.charAt(0).toUpperCase()}
+                      </div>
+
+                      <span className="font-semibold">
                         {item.name}
-                      </td>
+                      </span>
 
-                      <td>
-                        {item.email}
-                      </td>
+                    </div>
 
-                      <td>
-                        <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full">
-                          {item.coupon}
-                        </span>
-                      </td>
+                  </td>
 
-                      <td>
-                        {item.rule}
-                      </td>
-<td className="text-green-600 font-semibold">
-  ₹{item.earnings}
-</td>
+                  <td className="text-slate-300">
+                    {item.email}
+                  </td>
 
-<td>
-  <button
-    onClick={() => deleteAffiliate(item._id)}
-    className="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded"
-  >
-    Delete
-  </button>
-</td>
-                    </tr>
-                  )
-                )}
+                  <td>
 
-                {affiliates.length ===
-                  0 && (
-                  <tr>
-                    <td
-                      colSpan="5"
-                      className="text-center py-6 text-gray-500"
+                    <span className="bg-cyan-500/20 text-cyan-300 px-4 py-2 rounded-full text-sm">
+                      {item.coupon}
+                    </span>
+
+                  </td>
+
+                  <td>
+
+                    <span className="bg-violet-500/20 text-violet-300 px-4 py-2 rounded-full text-sm">
+                      {item.rule}
+                    </span>
+
+                  </td>
+
+                  <td className="font-bold text-green-400 text-lg">
+                    ₹{item.earnings}
+                  </td>
+
+                  <td className="text-center">
+
+                    <button
+                      onClick={() => deleteAffiliate(item._id)}
+                      className="bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 px-5 py-2 rounded-xl text-white font-semibold shadow-lg"
                     >
-                      No Affiliates Found
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </CardContent>
-        </Card>
+                      Delete
+                    </button>
+
+                  </td>
+
+                </tr>
+
+              ))}
+
+              {affiliates.length === 0 && (
+
+                <tr>
+
+                  <td
+                    colSpan="6"
+                    className="text-center py-10 text-slate-400"
+                  >
+                    🚫 No Affiliates Found
+                  </td>
+
+                </tr>
+
+              )}
+
+            </tbody>
+
+          </table>
+
+        </div>
+
       </div>
+
     </div>
-  );
+
+  </div>
+);
 }
